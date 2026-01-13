@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const ADMIN_EMAIL = '9003755@qq.com'
 
 // 本地模式：当没有配置Supabase时使用模拟数据
 const isLocalMode = !supabaseUrl || supabaseUrl === 'your_supabase_url_here'
@@ -69,7 +70,7 @@ export const auth = {
         id: data.user.id,
         email,
         name,
-        role: 'user',
+        role: email.toLowerCase() === ADMIN_EMAIL ? 'admin' : 'user',
       })
     }
     return { data, error }
