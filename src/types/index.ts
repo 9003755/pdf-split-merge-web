@@ -4,6 +4,8 @@ export interface User {
   email: string;
   name: string;
   createdAt: Date;
+  role?: 'admin' | 'user';
+  disabled?: boolean;
 }
 
 // 文件类型定义

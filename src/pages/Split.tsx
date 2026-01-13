@@ -5,6 +5,7 @@ import { useFile } from '../contexts/FileContext'
 import { useUI } from '../contexts/UIContext'
 import { useAuth } from '../contexts/AuthContext'
 import { splitPDF, downloadFile, formatFileSize, generatePDFThumbnailFromUrl } from '../utils/pdfUtils'
+import { canGuestUse, incrementGuestUsage } from '../utils/trial'
 import { database } from '../utils/supabase'
 import { PDFFile, PDFPage } from '../types'
 import FileUploader from '../components/FileUploader'
@@ -118,6 +119,14 @@ const Split: React.FC = () => {
       return
     }
 
+    if (!user) {
+      const gate = canGuestUse(3)
+      if (!gate.allowed) {
+        showNotification('访客试用次数已用完，请注册后继续使用', 'error')
+        return
+      }
+    }
+
     setLoading(true)
     try {
       // 获取原始文件
@@ -147,6 +156,15 @@ const Split: React.FC = () => {
       }
       
       addProcessedFile(processedFile)
+
+      if (!user) {
+        const used = incrementGuestUsage()
+        if (used >= 3) {
+          showNotification('您已达到访客试用上限，请注册账户继续使用', 'info')
+        } else {
+          showNotification(`访客试用剩余次数：${3 - used} 次`, 'info')
+        }
+      }
       
       // 保存到数据库（如果用户已登录）
       if (user) {

@@ -9,6 +9,7 @@ import Split from './pages/Split'
 import Merge from './pages/Merge'
 import History from './pages/History'
 import TopBanner from './components/TopBanner'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/split" element={<Split />} />
               <Route path="/merge" element={<Merge />} />
               <Route path="/history" element={<History />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
           </Router>
         </FileProvider>

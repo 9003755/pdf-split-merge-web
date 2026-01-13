@@ -97,6 +97,12 @@ const Home: React.FC = () => {
                 <History className="w-4 h-4 mr-2" />
                 历史记录
               </Link>
+              <Link
+                to="/admin"
+                className="flex items-center text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                后台管理
+              </Link>
               
               {user ? (
                 <div className="flex items-center space-x-3">

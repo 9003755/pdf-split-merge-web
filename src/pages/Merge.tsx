@@ -5,6 +5,7 @@ import { useFile } from '../contexts/FileContext'
 import { useUI } from '../contexts/UIContext'
 import { useAuth } from '../contexts/AuthContext'
 import { mergePDF, downloadFile, formatFileSize, getPDFPageCount } from '../utils/pdfUtils'
+import { canGuestUse, incrementGuestUsage } from '../utils/trial'
 import { database } from '../utils/supabase'
 import { PDFFile } from '../types'
 import FileUploader from '../components/FileUploader'
@@ -80,6 +81,14 @@ const Merge: React.FC = () => {
       return
     }
 
+    if (!user) {
+      const gate = canGuestUse(3)
+      if (!gate.allowed) {
+        showNotification('访客试用次数已用完，请注册后继续使用', 'error')
+        return
+      }
+    }
+
     setLoading(true)
     try {
       // 获取所有文件
@@ -125,6 +134,15 @@ const Merge: React.FC = () => {
       }
       
       showNotification(`PDF合并成功！共 ${processedFile.pageCount} 页`, 'success')
+
+      if (!user) {
+        const used = incrementGuestUsage()
+        if (used >= 3) {
+          showNotification('您已达到访客试用上限，请注册账户继续使用', 'info')
+        } else {
+          showNotification(`访客试用剩余次数：${3 - used} 次`, 'info')
+        }
+      }
     } catch (error) {
       showNotification('PDF合并失败，请重试', 'error')
     } finally {
