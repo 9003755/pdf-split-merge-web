@@ -40,7 +40,7 @@ export async function generatePDFThumbnailFromUrl(url: string, pageNumber: numbe
   canvas.width = Math.floor(scaledViewport.width)
   canvas.height = Math.floor(scaledViewport.height)
 
-  const renderTask = page.render({ canvasContext: context, viewport: scaledViewport })
+  const renderTask = page.render({ canvasContext: context, viewport: scaledViewport, canvas })
   await renderTask.promise
   return canvas.toDataURL()
 }
