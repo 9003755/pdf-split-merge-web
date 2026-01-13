@@ -39,6 +39,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             email: currentUser.email!,
             name: currentUser.user_metadata?.name || '用户',
             createdAt: new Date(currentUser.created_at),
+            role: currentUser.user_metadata?.role || 'user',
+            disabled: currentUser.disabled || false,
           })
         }
       } catch (error) {
@@ -58,6 +60,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: session.user.email!,
           name: session.user.user_metadata?.name || '用户',
           createdAt: new Date(session.user.created_at),
+          role: session.user.user_metadata?.role || 'user',
+          disabled: session.user.disabled || false,
         })
       } else {
         setUser(null)
@@ -75,11 +79,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (error) throw error
       
       if (data.user) {
+        const role = (data as any).profile?.role || data.user.user_metadata?.role || 'user'
+        const disabled = !!(data as any).profile?.disabled
         setUser({
           id: data.user.id,
           email: data.user.email!,
           name: data.user.user_metadata?.name || '用户',
           createdAt: new Date(data.user.created_at),
+          role,
+          disabled,
         })
       }
     } catch (error) {
