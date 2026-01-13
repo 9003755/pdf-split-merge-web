@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Split from './pages/Split'
 import Merge from './pages/Merge'
 import History from './pages/History'
+import TopBanner from './components/TopBanner'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <AuthProvider>
         <FileProvider>
           <Router>
+            <TopBanner />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
