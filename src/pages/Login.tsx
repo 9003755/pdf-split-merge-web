@@ -26,6 +26,11 @@ const Login: React.FC = () => {
       return
     }
 
+    if (isRegister && password.length < 6) {
+      showNotification('密码必须6位或6位以上，否则注册不成功', 'error')
+      return
+    }
+
     setLoading(true)
     
     try {
@@ -113,6 +118,9 @@ const Login: React.FC = () => {
                   required
                 />
               </div>
+              {isRegister && (
+                <p className="mt-2 text-xs text-gray-500">密码必须6位或6位以上，否则注册不成功</p>
+              )}
             </div>
 
             <button
