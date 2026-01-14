@@ -13,8 +13,19 @@ const Admin: React.FC = () => {
   useEffect(() => {
     if (!user || user.role !== 'admin') return
     ;(async () => {
-      const { data } = await admin.listUsers()
-      setUsers(data || [])
+      try {
+        const resp = await fetch('/.netlify/functions/list-users')
+        if (resp.ok) {
+          const json = await resp.json()
+          setUsers(json.users || [])
+        } else {
+          const { data } = await admin.listUsers()
+          setUsers(data || [])
+        }
+      } catch {
+        const { data } = await admin.listUsers()
+        setUsers(data || [])
+      }
     })()
   }, [user])
 
