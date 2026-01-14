@@ -95,6 +95,17 @@ export const auth = {
     if (data.user) {
       const res = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
       prof = res.data
+      if (!prof) {
+        await supabase.from('profiles').insert({
+          id: data.user.id,
+          email,
+          name: data.user.user_metadata?.name || '',
+          role: 'user',
+          disabled: false,
+        })
+        const res2 = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+        prof = res2.data
+      }
       if (prof?.disabled) {
         await supabase.auth.signOut()
         return { data: null, error: { message: '用户已被禁用' } }
